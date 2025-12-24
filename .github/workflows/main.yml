@@ -1,0 +1,54 @@
+name: Diabetes Model CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-train:
+    runs-on: ubuntu-latest
+    
+    steps:
+    # 1. Ambil kodingan dari GitHub
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # 2. Siapkan Python
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12' 
+
+    # 3. Install Library
+    - name: Install Dependencies
+      run: |
+        pip install mlflow pandas scikit-learn
+
+    # 4. Jalankan MLflow Project (Training)
+    - name: Run Training Experiment
+      run: | 
+        # Sesuai gambar repo kamu, folder langsung MLProject, bukan Workflow-CI/MLProject
+        cd MLProject
+        mlflow run . --experiment-name Eksperimen_CI_Docker --env-manager=local
+
+    # BAGIAN DOCKER (KRITERIA 3)
+
+    # 5. Login ke Docker Hub
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        # Gunakan nama secret yang sudah kamu buat di Settings tadi
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    # 6. Build & Push Image
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        # Context adalah folder tempat Dockerfile/MLProject berada
+        context: ./MLProject
+        push: true
+        
+        tags: miftahuljnh/diabetes-prediction:latest
