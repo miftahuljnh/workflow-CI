@@ -24,4 +24,7 @@ jobs:
 
     - name: Run Training Experiment
       run: | 
+      
+    - name: Run Training Experiment
+      run: | 
         mlflow run . --env-manager=local
