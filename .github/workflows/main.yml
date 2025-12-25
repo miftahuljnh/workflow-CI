@@ -30,7 +30,6 @@ jobs:
       - name: Run MLflow Project
         run: |
           mlflow run . --env-manager=local
-        pip install mlflow pandas scikit-learn dagshub
 
     - name: Run Training Experiment
       run: | 
