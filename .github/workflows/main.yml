@@ -1,4 +1,4 @@
-name: Diabetes Model CI/CD
+name: Diabetes Model CI
 
 on:
   push:
