@@ -6,8 +6,15 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, recall_score
 import os
 
-data_path = "Kriteria 2/diabetes_preprocessing/diabetes.csv"
-df = pd.read_csv(data_path)
+train_path = "MLProject/diabetes_preprocessing/X_train_scaled.csv"
+y_train_path = "MLProject/diabetes_preprocessing/y_train.csv"
+test_path = "MLProject/diabetes_preprocessing/X_test_scaled.csv"
+y_test_path = "MLProject/diabetes_preprocessing/y_test.csv"
+
+X_train = pd.read_csv(train_path)
+y_train = pd.read_csv(y_train_path)
+X_test = pd.read_csv(test_path)
+y_test = pd.read_csv(y_test_path)
 
 X = df.drop(columns=["Outcome"])
 y = df["Outcome"]
