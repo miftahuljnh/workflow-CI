@@ -1,43 +1,47 @@
 import mlflow
 import mlflow.sklearn
 import pandas as pd
-from sklearn.model_selection import train_test_split
+
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, recall_score
-import os
 
-train_path = "MLProject/diabetes_preprocessing/X_train_scaled.csv"
-y_train_path = "MLProject/diabetes_preprocessing/y_train.csv"
-test_path = "MLProject/diabetes_preprocessing/X_test_scaled.csv"
-y_test_path = "MLProject/diabetes_preprocessing/y_test.csv"
+BASE_PATH = "MLProject/diabetes_preprocessing"
 
-X_train = pd.read_csv(train_path)
-y_train = pd.read_csv(y_train_path)
-X_test = pd.read_csv(test_path)
-y_test = pd.read_csv(y_test_path)
+X_train_path = f"{BASE_PATH}/X_train_scaled.csv"
+X_test_path = f"{BASE_PATH}/X_test_scaled.csv"
+y_train_path = f"{BASE_PATH}/y_train.csv"
+y_test_path = f"{BASE_PATH}/y_test.csv"
 
-X = df.drop(columns=["Outcome"])
-y = df["Outcome"]
-
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42, stratify=y
-)
+X_train = pd.read_csv(X_train_path)
+X_test = pd.read_csv(X_test_path)
+y_train = pd.read_csv(y_train_path).squeeze()  # jadi Series
+y_test = pd.read_csv(y_test_path).squeeze()
 
 mlflow.sklearn.autolog()
 
-clf = RandomForestClassifier(n_estimators=200, max_depth=12, random_state=42)
-clf.fit(X_train, y_train)
+with mlflow.start_run():
 
-y_pred = clf.predict(X_test)
-acc = accuracy_score(y_test, y_pred)
-recall = recall_score(y_test, y_pred)
+    model = RandomForestClassifier(
+        n_estimators=200,
+        max_depth=12,
+        random_state=42
+    )
 
-# Simpan model ke folder lokal
-mlflow.sklearn.save_model(
-    sk_model=clf,
-    path="mlflow_model_local",
-    input_example=X_test.iloc[:1]
-)
+    model.fit(X_train, y_train)
 
-print(f"Accuracy : {acc:.4f}")
-print(f"Recall   : {recall:.4f}")
+    y_pred = model.predict(X_test)
+
+    acc = accuracy_score(y_test, y_pred)
+    recall = recall_score(y_test, y_pred)
+
+    mlflow.log_metric("accuracy", acc)
+    mlflow.log_metric("recall", recall)
+
+    mlflow.sklearn.save_model(
+        sk_model=model,
+        path="mlflow_model_local",
+        input_example=X_test.iloc[:1]
+    )
+
+    print(f"Accuracy : {acc:.4f}")
+    print(f"Recall   : {recall:.4f}")
