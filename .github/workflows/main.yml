@@ -10,31 +10,18 @@ jobs:
   build-and-train:
     runs-on: ubuntu-latest
     
-    steps:
-    # 1. Ambil kodingan dari GitHub
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    # 2. Siapkan Python
     - name: Set up Python 3.12
       uses: actions/setup-python@v4
       with:
         python-version: '3.12' 
 
-    # 3. Install Library
     - name: Install Dependencies
       run: |
-        pip install mlflow pandas scikit-learn
+        pip install mlflow pandas scikit-learn dagshub
 
-    # 4. Jalankan MLflow Project (Training)
     - name: Run Training Experiment
       run: | 
-        # Sesuai gambar repo kamu, folder langsung MLProject, bukan Workflow-CI/MLProject
-        cd MLProject
-        mlflow run . --experiment-name Eksperimen_CI_Docker --env-manager=local
-
-    
-        context: ./MLProject
-        push: true
-        
-        tags: miftahuljnh/diabetes-prediction:latest
+        mlflow run . --env-manager=local
