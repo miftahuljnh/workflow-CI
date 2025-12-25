@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score, recall_score
 
 BASE_PATH = "MLProject/diabetes_preprocessing"
 
-X_train_path = f"{BASE_PATH}/X_train_scaled.csv"
+X_train_path = f"{BASE_PATH}/X_train_scaled.csv" 
 X_test_path = f"{BASE_PATH}/X_test_scaled.csv"
 y_train_path = f"{BASE_PATH}/y_train.csv"
 y_test_path = f"{BASE_PATH}/y_test.csv"
