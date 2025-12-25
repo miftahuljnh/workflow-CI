@@ -1,0 +1,42 @@
+name: Diabetes CI MLflow 
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Miniconda
+      uses: conda-incubator/setup-miniconda@v3
+      with:
+        auto-update-conda: true
+        activate-environment: ""
+        channels: conda-forge,defaults
+
+    - name: Install MLflow
+      run: |
+        pip install --upgrade pip
+        pip install mlflow
+
+    - name: Run MLflow Project
+      run: |
+        cd MLProject
+        export MLFLOW_TRACKING_URI=file:$(pwd)/mlruns
+        mlflow run .
+
+    - name: Upload model artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: heart-disease-model
+        path: MLProject/model
