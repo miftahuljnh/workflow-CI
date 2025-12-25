@@ -1,7 +1,8 @@
-name: ci_workflow_Project
+name: Diabetes Model CI
 
 conda_env: conda.yml
 
 entry_points:
   main:
     command: "python modelling.py"
+
