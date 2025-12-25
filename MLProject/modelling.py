@@ -72,3 +72,4 @@ with mlflow.start_run():
     print(f"Accuracy : {acc:.4f}")
     print(f"Recall   : {recall:.4f}")
     print("-" * 30)
+ 
