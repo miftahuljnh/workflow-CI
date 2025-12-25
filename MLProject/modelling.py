@@ -37,8 +37,6 @@ except Exception as e:
 
 mlflow.sklearn.autolog()
 
-mlflow.set_experiment("Diabetes_Classification")
-
 with mlflow.start_run():
     model = RandomForestClassifier(
         n_estimators=200,
